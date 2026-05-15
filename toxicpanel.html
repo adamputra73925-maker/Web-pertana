@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium FF Panel V4 - Secure Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+                        url('https://wallpaperaccess.com/full/2103444.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #sparkleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- STYLING LOGIN & PANEL --- */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 10;
+            margin: 20px;
+        }
+
+        /* Sembunyikan Panel Utama di awal */
+        #mainPanel { display: none; }
+
+        h1 {
+            font-weight: 800;
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #ff0055;
+            text-shadow: 0 0 10px #ff0055;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            display: block;
+            margin-bottom: 5px;
+            color: #ff7b00;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            outline: none;
+        }
+
+        /* Slider Styles */
+        .slider-group {
+            text-align: left;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .slider-item { margin-bottom: 15px; }
+        .slider-item label { display: flex; justify-content: space-between; font-size: 14px; }
+        .slider-item span { color: #ff0055; }
+
+        input[type="range"] { width: 100%; accent-color: #ff0055; cursor: pointer; }
+
+        /* Fitur List */
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid transparent;
+        }
+
+        /* Progress Bar */
+        .progress-container { display: none; margin-top: 20px; }
+        .progress-bar {
+            width: 100%; height: 12px; background: #222; border-radius: 10px; overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%; height: 100%; background: linear-gradient(90deg, #ff0055, #ff7b00);
+            box-shadow: 0 0 10px #ff0055;
+        }
+
+        /* Buttons */
+        .btn-action {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
+            background: linear-gradient(45deg, #ff0055, #ff7b00);
+            color: white; font-weight: 800; cursor: pointer; text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3);
+            transition: 0.3s;
+        }
+        .btn-action:hover { transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+
+    <canvas id="sparkleCanvas"></canvas>
+
+    <!-- FORM LOGIN -->
+    <div id="loginForm" class="container">
+        <h1>LOGIN ACCESS</h1>
+        <p style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">Masukkan Lisensi Panel Anda</p>
+        
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="userInput" placeholder="Masukkan Username...">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="passInput" placeholder="Masukkan Password...">
+        </div>
+        
+        <button class="btn-action" onclick="checkLogin()">Login Panel</button>
+        <p id="loginError" style="color: #ff0055; font-size: 11px; margin-top: 10px; display: none;">Username atau Password Salah!</p>
+    </div>
+
+    <!-- PANEL UTAMA -->
+    <div id="mainPanel" class="container">
+        <h1>VVIP PANEL MOD</h1>
+        <p style="font-size: 10px; opacity: 0.6; margin-bottom: 15px;">WELCOME PREMIUM USER</p>
+
+        <div class="slider-group">
+            <div class="slider-item">
+                <label>Sensitivity <span id="val1">50%</span></label>
+                <input type="range" min="1" max="100" value="50" oninput="updateVal('val1', this.value)">
+            </div>
+            <div class="slider-item">
+                <label>Headlock <span id="val2">1%</span></label>
+                <input type="range" min="1" max="100" value="1" oninput="updateVal('val2', this.value)">
+            </div>
+            <div class="slider-item">
+                <label>Bodylock <span id="val3">1%</span></label>
+                <input type="range" min="1" max="100" value="1" oninput="updateVal('val3', this.value)">
+            </div>
+        </div>
+
+        <div style="text-align: left; margin-bottom: 20px;">
+            <div class="feature-item"><span>Auto Headshot</span><input type="checkbox"></div>
+            <div class="feature-item"><span>Aim Lock</span><input type="checkbox"></div>
+        </div>
+
+        <button class="btn-action" id="injectBtn" onclick="startInjection()">Aktifkan Fitur</button>
+
+        <div class="progress-container" id="progContainer">
+            <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+            <p id="status-text" style="font-size: 12px; margin-top: 5px; font-style: italic;"></p>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA LOGIN (Ubah di sini) ---
+        const VALID_USER = "NOVA";
+        const VALID_PASS = "BASIC";
+
+        function checkLogin() {
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+            const error = document.getElementById('loginError');
+
+            if(user === VALID_USER && pass === VALID_PASS) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('mainPanel').style.display = 'block';
+            } else {
+                error.style.display = 'block';
+            }
+        }
+
+        function updateVal(id, val) {
+            document.getElementById(id).innerText = val + "%";
+        }
+
+        // --- LOGIKA INJEKSI (Bisa diulang) ---
+        function startInjection() {
+            const container = document.getElementById('progContainer');
+            const fill = document.getElementById('progFill');
+            const status = document.getElementById('status-text');
+            const btn = document.getElementById('injectBtn');
+
+            container.style.display = 'block';
+            btn.innerText = "Processing...";
+            btn.style.opacity = "0.7";
+            
+            let width = 0;
+            const msg = ["Bypassing...", "Injecting...", "Success!"];
+
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    status.innerText = msg[2];
+                    status.style.color = "#00ff88";
+                    
+                    // Kembalikan tombol agar bisa dipencet lagi
+                    setTimeout(() => {
+                        btn.innerText = "Aktifkan Fitur";
+                        btn.style.opacity = "1";
+                        fill.style.width = "0%";
+                    }, 2000);
+                } else {
+                    width++;
+                    fill.style.width = width + '%';
+                    status.innerText = width < 50 ? msg[0] : msg[1];
+                    status.style.color = "white";
+                }
+            }, 30);
+        }
+
+        // --- ANIMASI BACKGROUND (Sparkle) ---
+        const canvas = document.getElementById('sparkleCanvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+
+        function init() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<50; i++) particles.push({
+                x: Math.random()*w, y: Math.random()*h,
+                s: Math.random()*2, sy: Math.random()* -0.5 - 0.2
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0,0,w,h);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.y += p.sy; if(p.y < 0) p.y = h;
+            });
+            requestAnimationFrame(draw);
+        }
+        window.addEventListener('resize', init);
+        init(); draw();
+    </script>
+</body>
+</html>
